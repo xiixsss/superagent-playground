@@ -8,6 +8,9 @@
  *
  * 红队指挥和执行角色一直看见原来的工具和人设。放开之后，整篇工作区说明
  * 改成点名文件路径，需要时再读。
+ *
+ * 一键模式（oneClickInbox，默认开）额外在首步注入一次投递提醒：先看工作区
+ * `drop/` 有没有待处理文件，处理完写 `runs/`；只注入一次，压缩后重置。
  */
 export const name = 'dsh-purge-redteam-anchor'
 
@@ -108,6 +111,28 @@ function instructionHintMessages(messages, state) {
   return kept
 }
 
+/** One-click inbox reminder: injected once, before the first model step. */
+function buildOneClickHint() {
+  return {
+    id: globalThis.crypto.randomUUID(),
+    role: 'user',
+    content: [{
+      type: 'text',
+      text: '<system-reminder>\n'
+        + '一键模式：工作区投递目录是 `drop/`，产出写到 `runs/`。'
+        + '回答前先列 `drop/`，有待处理文件就端到端跑完；空的话用一句大白话请用户把文件放进 `drop/` 并回「开始」。\n'
+        + '</system-reminder>',
+    }],
+    source: { kind: 'one-click-inbox', plugin: name },
+  }
+}
+
+function oneClickHintMessages(messages, state, policy) {
+  if (!policy.oneClickInbox || state.dropHinted) return messages
+  state.dropHinted = true
+  return [...messages, buildOneClickHint()]
+}
+
 const promotionBySession = new WeakMap()
 
 function stateFor(session) {
@@ -122,6 +147,7 @@ function stateFor(session) {
       turnEnded: false,
       steps: 0,
       instructionHinted: false,
+      dropHinted: false,
     }
     promotionBySession.set(session, state)
   }
@@ -136,6 +162,7 @@ function resetToControlled(state) {
   state.turnEnded = false
   state.steps = 0
   state.instructionHinted = false
+  state.dropHinted = false
 }
 
 function scanEvents(state, session) {
@@ -180,6 +207,7 @@ export function apply(ctx, config = {}) {
     promoteAfterFirstResponse: config.promoteAfterFirstResponse !== false,
     bootstrapMaxTokens: integerAtLeast(config.bootstrapMaxTokens, 1024, 1),
     instructionHint: config.instructionHint !== false,
+    oneClickInbox: config.oneClickInbox !== false,
   }
 
   ctx.on('session/event', (session, event) => {
@@ -189,11 +217,13 @@ export function apply(ctx, config = {}) {
 
   ctx.on('agent/pre-step', async (payload, next) => {
     const decision = await next()
-    if (decision?.kind !== 'enter' || !policy.instructionHint) return decision
+    if (decision?.kind !== 'enter' || !Array.isArray(decision.messages)) return decision
     try {
       const state = refresh(payload?.agent, policy)
-      if (state === undefined || !state.promoted) return decision
-      return { ...decision, messages: instructionHintMessages(decision.messages, state) }
+      if (state === undefined) return decision
+      let messages = oneClickHintMessages(decision.messages, state, policy)
+      if (policy.instructionHint && state.promoted) messages = instructionHintMessages(messages, state)
+      return messages === decision.messages ? decision : { ...decision, messages }
     } catch {
       return decision
     }
