@@ -1,0 +1,1 @@
+﻿root=/dev/ram0 init=/init mitigations=off stack_depot_disable=on cgroup_disable=pressure androidboot.selinux=permissive enforcing=0 printk.devkmsg=on androidboot.hardware=qcom nosmap nosmep quiet console=tty0 console=ttyS0 androidboot.console=tty0 ignore_loglevel cpuidle.off=1 oprofile.timer=1 oprofile.cpu_type=timer irqaffinity=0

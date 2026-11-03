@@ -1,0 +1,112 @@
+﻿Captured at: 14:19:25.954
+Sensor Device:
+Total 8 h/w sensors, 8 running 0 disabled clients:
+0x00000000) active-count = 2; sampling_period(ms) = {200.0, 200.0}, selected = 200.00 ms; batching_period(ms) = {2000.0, 100.0}, selected = 0.00 ms
+Sensor List:
+0000000000) LSM330 Accelerometer      | STMicroelectronics | ver: 1 | type: android.sensor.accelerometer(1) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000001) Linear Acceleration       | QTI             | ver: 2 | type: android.sensor.linear_acceleration(10) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000002) Magnetometer              | AKM             | ver: 1 | type: android.sensor.magnetic_field(2) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000003) Orientation               | Yamaha          | ver: 1 | type: android.sensor.orientation(3) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000004) Gravity                   | QTI             | ver: 2 | type: android.sensor.gravity(9) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000005) Gyroscope                 | STMicroelectronics | ver: 1 | type: android.sensor.gyroscope(4) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000006) Proximity sensor          | AMS TAOS        | ver: 2 | type: android.sensor.proximity(8) | perm: n/a | flags: 0x00000003
+	on-change | minRate=5.00Hz | maxRate=5.00Hz | no batching | wakeUp | 
+0x00000007) Light sensor              | AMS TAOS        | ver: 1 | type: android.sensor.light(5) | perm: n/a | flags: 0x00000002
+	on-change | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f636779) Corrected Gyroscope Sensor | AOSP            | ver: 1 | type: android.sensor.gyroscope(4) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f676172) Game Rotation Vector Sensor | AOSP            | ver: 3 | type: android.sensor.game_rotation_vector(15) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f676273) Gyroscope Bias (debug)    | AOSP            | ver: 1 | type: android.sensor.accelerometer(1) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f67656f) GeoMag Rotation Vector Sensor | AOSP            | ver: 3 | type: android.sensor.geomagnetic_rotation_vector(20) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f677276) Gravity Sensor            | AOSP            | ver: 3 | type: android.sensor.gravity(9) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f6c696e) Linear Acceleration Sensor | AOSP            | ver: 3 | type: android.sensor.linear_acceleration(10) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f726f76) Rotation Vector Sensor    | AOSP            | ver: 3 | type: android.sensor.rotation_vector(11) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f797072) Orientation Sensor        | AOSP            | ver: 1 | type: android.sensor.orientation(3) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+Fusion States:
+9-axis fusion disabled (0 clients), gyro-rate= 200.00Hz, q=< 0, 0, 0, 0 > (0), b=< 0, 0, 0 >
+game fusion(no mag) disabled (0 clients), gyro-rate= 200.00Hz, q=< 0, 0, 0, 0 > (0), b=< 0, 0, 0 >
+geomag fusion (no gyro) disabled (0 clients), gyro-rate= 200.00Hz, q=< 0, 0, 0, 0 > (0), b=< 0, 0, 0 >
+Recent Sensor events:
+LSM330 Accelerometer: last 50 events
+	 1 (ts=735.327260436, wall=14:19:15.930) 0.14, 9.66, 2.23, 
+	 2 (ts=735.528064041, wall=14:19:16.131) 0.13, 9.63, 2.30, 
+	 3 (ts=735.731906099, wall=14:19:16.335) 0.10, 9.60, 2.32, 
+	 4 (ts=735.932746164, wall=14:19:16.536) 0.10, 9.58, 2.27, 
+	 5 (ts=736.133474445, wall=14:19:16.736) 0.19, 9.57, 2.28, 
+	 6 (ts=736.333961089, wall=14:19:16.937) 0.19, 9.59, 2.24, 
+	 7 (ts=736.534126551, wall=14:19:17.137) 0.16, 9.61, 2.28, 
+	 8 (ts=736.735801602, wall=14:19:17.339) 0.17, 9.56, 2.29, 
+	 9 (ts=736.937217481, wall=14:19:17.540) 0.12, 9.63, 2.32, 
+	10 (ts=737.138279215, wall=14:19:17.741) 0.16, 9.61, 2.23, 
+	11 (ts=737.339497292, wall=14:19:17.942) 0.19, 9.66, 2.23, 
+	12 (ts=737.540313969, wall=14:19:18.143) 0.15, 9.59, 2.26, 
+	13 (ts=737.740601269, wall=14:19:18.344) 0.13, 9.56, 2.30, 
+	14 (ts=737.940974281, wall=14:19:18.544) 0.19, 9.57, 2.29, 
+	15 (ts=738.142062731, wall=14:19:18.745) 0.13, 9.56, 2.26, 
+	16 (ts=738.344830839, wall=14:19:18.948) 0.14, 9.66, 2.29, 
+	17 (ts=738.547803543, wall=14:19:19.151) 0.16, 9.62, 2.31, 
+	18 (ts=738.749475348, wall=14:19:19.352) 0.11, 9.66, 2.28, 
+	19 (ts=738.951330398, wall=14:19:19.554) 0.14, 9.64, 2.31, 
+	20 (ts=739.152361049, wall=14:19:19.755) 0.19, 9.58, 2.26, 
+	21 (ts=739.352681620, wall=14:19:19.956) 0.15, 9.63, 2.26, 
+	22 (ts=739.553378348, wall=14:19:20.156) 0.12, 9.59, 2.25, 
+	23 (ts=739.754786266, wall=14:19:20.358) 0.16, 9.59, 2.25, 
+	24 (ts=739.955879714, wall=14:19:20.559) 0.10, 9.58, 2.27, 
+	25 (ts=740.156254758, wall=14:19:20.759) 0.16, 9.61, 2.27, 
+	26 (ts=740.357590763, wall=14:19:20.961) 0.19, 9.56, 2.23, 
+	27 (ts=740.561567832, wall=14:19:21.165) 0.12, 9.59, 2.29, 
+	28 (ts=740.762679187, wall=14:19:21.366) 0.10, 9.56, 2.26, 
+	29 (ts=740.963487111, wall=14:19:21.566) 0.15, 9.57, 2.31, 
+	30 (ts=741.164712443, wall=14:19:21.768) 0.14, 9.56, 2.32, 
+	31 (ts=741.365876403, wall=14:19:21.969) 0.17, 9.62, 2.29, 
+	32 (ts=741.566949641, wall=14:19:22.170) 0.16, 9.61, 2.33, 
+	33 (ts=741.767304565, wall=14:19:22.370) 0.19, 9.57, 2.25, 
+	34 (ts=741.967535360, wall=14:19:22.571) 0.11, 9.58, 2.24, 
+	35 (ts=742.168600420, wall=14:19:22.772) 0.12, 9.64, 2.29, 
+	36 (ts=742.369147668, wall=14:19:22.972) 0.16, 9.60, 2.26, 
+	37 (ts=742.569579196, wall=14:19:23.173) 0.13, 9.62, 2.29, 
+	38 (ts=742.770011542, wall=14:19:23.373) 0.16, 9.63, 2.26, 
+	39 (ts=742.971104747, wall=14:19:23.574) 0.19, 9.65, 2.27, 
+	40 (ts=743.173093165, wall=14:19:23.776) 0.17, 9.60, 2.27, 
+	41 (ts=743.373856702, wall=14:19:23.977) 0.13, 9.64, 2.30, 
+	42 (ts=743.576365893, wall=14:19:24.179) 0.19, 9.60, 2.25, 
+	43 (ts=743.778945992, wall=14:19:24.382) 0.16, 9.59, 2.23, 
+	44 (ts=743.980669088, wall=14:19:24.584) 0.14, 9.58, 2.25, 
+	45 (ts=744.181136045, wall=14:19:24.784) 0.16, 9.60, 2.29, 
+	46 (ts=744.384299213, wall=14:19:24.987) 0.19, 9.63, 2.30, 
+	47 (ts=744.585478601, wall=14:19:25.188) 0.12, 9.57, 2.32, 
+	48 (ts=744.786059731, wall=14:19:25.389) 0.14, 9.64, 2.29, 
+	49 (ts=744.986833740, wall=14:19:25.590) 0.17, 9.59, 2.25, 
+	50 (ts=745.187117129, wall=14:19:25.790) 0.18, 9.57, 2.25, 
+Active sensors:
+LSM330 Accelerometer (handle=0x00000000, connections=2)
+Socket Buffer size = 39 events
+WakeLock Status: not held 
+Mode : NORMAL
+Sensor Privacy: disabled
+2 active connections
+Connection Number: 0 
+	Operating Mode: NORMAL
+	 com.android.server.power.FaceDownDetector | WakeLockRefCount 0 | uid 1000 | cache size 0 | max cache size 0
+	 LSM330 Accelerometer 0x00000000 | status: active | pending flush events 0 
+Connection Number: 1 
+	Operating Mode: NORMAL
+	 com.android.server.wm.WindowOrientationListener | WakeLockRefCount 0 | uid 1000 | cache size 0 | max cache size 0
+	 LSM330 Accelerometer 0x00000000 | status: active | pending flush events 0 
+0 direct connections
+Previous Registrations:
+14:07:15 + 0x00000000 pid=  346 uid= 1000 package=com.android.server.wm.WindowOrientationListener samplingPeriod=200000us batchingPeriod=100000us
+14:07:11 + 0x00000000 pid=  346 uid= 1000 package=com.android.server.power.FaceDownDetector samplingPeriod=200000us batchingPeriod=2000000us

@@ -1,0 +1,29 @@
+﻿/vendor/lib/egl:
+total 252
+drwxr-xr-x 2 root shell   4096 2026-09-20 16:36 .
+drwxr-xr-x 9 root shell   8192 2026-09-20 16:36 ..
+-rw-r--r-- 1 root root   73312 2026-09-20 16:36 libEGL_adreno.so
+-rw-r--r-- 1 root root   60476 2026-09-20 16:36 libGLESv1_CM_adreno.so
+-rw-r--r-- 1 root root  108424 2026-09-20 16:36 libGLESv2_adreno.so
+
+/vendor/lib64/egl:
+total 280
+drwxr-xr-x 2 root shell   4096 2026-09-20 16:36 .
+drwxr-xr-x 8 root shell   8192 2026-09-20 16:36 ..
+-rw-r--r-- 1 root root   78184 2026-09-20 16:36 libEGL_adreno.so
+-rw-r--r-- 1 root root   65176 2026-09-20 16:36 libGLESv1_CM_adreno.so
+-rw-r--r-- 1 root root  123200 2026-09-20 16:36 libGLESv2_adreno.so
+---
+[graphics.gpu.profiler.support]: [true]
+[init.svc.gpu]: [running]
+[init.svc.vendor.gralloc-2-0]: [running]
+[init.svc_debug_pid.gpu]: [197]
+[init.svc_debug_pid.vendor.gralloc-2-0]: [181]
+[persist.graphics.egl]: []
+[ro.boottime.gpu]: [4141222113]
+[ro.boottime.vendor.gralloc-2-0]: [4040317409]
+[ro.hardware.egl]: [adreno]
+[ro.hardware.vulkan]: [adreno]
+[ro.hwui.use_vulkan]: []
+[ro.opengles.max]: [196609]
+[ro.opengles.version]: [196609]

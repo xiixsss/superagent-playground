@@ -1,0 +1,5 @@
+﻿[phone.imei]: [869169021589125]
+[phone.imsi]: [460007563256525]
+[phone.simserial]: [89860095026598213139]
+[ro.boot.serialno]: [002c7a00]
+[ro.serialno]: [002c7a00]

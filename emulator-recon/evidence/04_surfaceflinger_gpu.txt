@@ -1,0 +1,2 @@
+Sync configuration: [using: EGL_KHR_fence_sync EGL_KHR_wait_sync]
+(注：dumpsys SurfaceFlinger 后续输出在设备侧段错误中断，未取得完整 GLES 渲染器字符串；下一条可复现命令见 证据.md)

@@ -1,0 +1,2 @@
+mWifiInfo SSID: ""NoWiFi-RHIxRB"", BSSID: 5e:2c:b9:2d:2d:3d, MAC: d2:6a:31:0e:68:3a, IP: /172.16.1.4, Security type: -1, Supplicant state: COMPLETED, Wi-Fi standard: 0, RSSI: -20, Link speed: 1200Mbps, Tx Link speed: 1200Mbps, Frequency: 5180MHz
+(注：dumpsys wifi 里的 MAC 是 useRandomizedMac=true 的随机 MAC；链路层 wlan0 真实地址见 03_mac.txt = 00:db:4f:c8:a1:bd)

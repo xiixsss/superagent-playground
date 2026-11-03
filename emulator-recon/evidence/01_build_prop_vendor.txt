@@ -1,0 +1,118 @@
+﻿####################################
+# from generate-common-build-props
+# These properties identify this partition image.
+####################################
+ro.product.vendor.brand=Xiaomi
+ro.product.vendor.device=unicorn
+ro.product.vendor.manufacturer=Google
+ro.product.vendor.model=AOSP
+ro.product.vendor.name=unicorn
+ro.vendor.product.cpu.abilist=x86_64,x86,arm64-v8a,armeabi-v7a,armeabi
+ro.vendor.product.cpu.abilist32=x86,armeabi-v7a,armeabi
+ro.vendor.product.cpu.abilist64=x86_64,arm64-v8a
+ro.vendor.build.date=Mon Sep 21 11:55:09 CST 2026
+ro.vendor.build.date.utc=1789962909
+ro.vendor.build.fingerprint=Xiaomi/unicorn/unicorn:14/UQ1A.240205.09211156/ucsm09211155:user/release-keys
+ro.vendor.build.id=UQ1A.240205.09211156
+ro.vendor.build.tags=release-keys
+ro.vendor.build.type=user
+ro.vendor.build.version.incremental=ucsm.20260921.115630
+ro.vendor.build.version.release=14
+ro.vendor.build.version.release_or_codename=14
+ro.vendor.build.version.sdk=34
+####################################
+# from /home/ucsm/Code/out/u-emulator/target/product/ld_generic_x86_64/obj/ETC/android_info_prop_intermediates/android_info.prop
+####################################
+####################################
+# from variable ADDITIONAL_VENDOR_PROPERTIES
+####################################
+ro.vndk.version=34
+ro.bionic.arch=x86_64
+ro.bionic.cpu_variant=
+ro.bionic.2nd_arch=x86
+ro.bionic.2nd_cpu_variant=
+persist.sys.dalvik.vm.lib.2=libart.so
+dalvik.vm.isa.x86_64.variant=x86_64
+dalvik.vm.isa.x86_64.features=default
+dalvik.vm.isa.x86.variant=x86_64
+dalvik.vm.isa.x86.features=default
+ro.product.first_api_level=28
+ro.vendor.build.security_patch=
+ro.product.board=msm8998
+ro.board.platform=aosp-user
+ro.hwui.use_vulkan=
+####################################
+# from variable PRODUCT_VENDOR_PROPERTIES
+####################################
+dalvik.vm.heapstartsize=16m
+dalvik.vm.heapgrowthlimit=192m
+dalvik.vm.heapsize=512m
+dalvik.vm.heaptargetutilization=0.85
+dalvik.vm.heapminfree=512k
+dalvik.vm.heapmaxfree=8m
+external_storage.projid.enabled=1
+external_storage.casefold.enabled=1
+external_storage.sdcardfs.enabled=0
+ro.control_privapp_permissions=disable
+ro.crypto.volume.filenames_mode=aes-256-cts
+ro.hardware.audio.tinyalsa.period_count=4
+ro.hardware.audio.tinyalsa.period_size_multiplier=2
+ro.hardware.audio.tinyalsa.host_latency_ms=80
+ro.incremental.enable=yes
+ro.logd.size=1M
+ro.soc.manufacturer=AOSP
+ro.surface_flinger.supports_background_blur=1
+ro.zygote.disable_gl_preload=1
+debug.sf.vsync_reactor_ignore_present_fences=true
+debug.stagefright.c2inputsurface=-1
+debug.stagefright.ccodec=4
+graphics.gpu.profiler.support=true
+persist.sys.zram_enabled=1
+wifi.direct.interface=p2p-dev-wlan0
+wifi.interface=wlan0
+ro.zygote=zygote64_32
+# Removed by post_process_props.py because overridden by keyguard.no_require_sim=true
+#keyguard.no_require_sim?=true
+# Removed by post_process_props.py because overridden by ro.com.android.dataroaming=true
+#ro.com.android.dataroaming?=true
+# Removed by post_process_props.py because overridden by ro.zygote=zygote64_32
+#ro.zygote?=zygote32
+ro.logd.size.stats=64K
+log.tag.stats_log=I
+ro.carrier=unknown
+ro.recovery.usb.vid=18D1
+ro.recovery.usb.adb.pid=D001
+ro.recovery.usb.fastboot.pid=4EE0
+ro.hardware.egl=adreno
+ro.hardware.vulkan=adreno
+keyguard.no_require_sim=true
+ro.cdma.home.operator.alpha=Android
+ro.cdma.home.operator.numeric=302780
+ro.com.android.dataroaming=true
+ro.telephony.default_network=32
+ro.boot.qemu=1
+persist.vendor.vbt.enable=1
+debug.wm.disable_deprecated_abi_dialog=true
+####################################
+# from variable PRODUCT_DEFAULT_PROPERTY_OVERRIDES
+####################################
+ro.arch=x86
+persist.rtc_local_time=1
+ro.dalvik.vm.native.bridge=libhoudini.so
+####################################
+# from variable PRODUCT_PROPERTY_OVERRIDES
+####################################
+vendor.rild.libpath=/vendor/lib64/libmtk-ril.so
+ro.crypto.dm_default_key.options_format.version=2
+ro.ril.hsxpa=1
+ro.ril.gprsclass=10
+keyguard.no_require_sim=true
+ro.com.android.dataroaming=true
+ro.dalvik.vm.isa.arm64=x86_64
+ro.enable.native.bridge.exec64=1
+ro.dalvik.vm.isa.arm=x86
+ro.enable.native.bridge.exec=1
+persist.sys.nativebridge=1
+ro.vendor.enable.native.bridge.exec=1
+ro.vendor.enable.native.bridge.exec64=1
+# end of file
