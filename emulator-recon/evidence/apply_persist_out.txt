@@ -1,0 +1,27 @@
+﻿=== backup originals to /data/local/tmp/l3_backup ===
+total 12
+-rwxr-xr-x 1 root root  262 2026-11-03 20:18 init.qemu-adb-keys.sh.orig
+-rw-r--r-- 1 root root  928 2026-11-03 20:18 ldspoof.sh.orig
+-rw-r--r-- 1 root root 1540 2026-11-03 20:18 system_ext_build.prop.orig
+=== install ldspoof.sh (new) ===
+=== install fake cpuinfo to /system/etc ===
+=== append system_ext build.prop overrides ===
+=== delete qemu feature script ===
+=== result ===
+-rw-r--r-- 1 root root 1949 2026-11-03 20:18 /system/etc/cpuinfo_arm64
+-rw-r--r-- 1 root root 2218 2026-11-03 20:18 /system/etc/ldspoof.sh
+-rw-r--r-- 1 root root 2001 2026-11-03 20:18 /system/system_ext/etc/build.prop
+ro.lockscreen.disable.default=1
+# end of file
+
+# ==== real-device spoof (garnet) - L3 instance 0 ====
+ro.product.system_ext.brand=Redmi
+ro.product.system_ext.device=garnet
+ro.product.system_ext.manufacturer=Xiaomi
+ro.product.system_ext.model=2312DRA50G
+ro.product.system_ext.name=garnet_global
+ro.system_ext.build.fingerprint=Redmi/garnet_global/garnet:14/UKQ1.231003.002/V816.0.6.0.UNRMIXM:user/release-keys
+ro.system_ext.build.id=UKQ1.231003.002
+ro.system_ext.build.version.incremental=V816.0.6.0.UNRMIXM
+ls: /system/system_ext/bin/init.qemu-adb-keys.sh: No such file or directory
+=== DONE ===

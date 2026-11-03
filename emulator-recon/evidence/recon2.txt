@@ -1,0 +1,317 @@
+﻿=== ID ===
+uid=0(root) gid=0(root) groups=0(root) context=u:r:su:s0
+=== MOUNT ===
+/dev/block/sda2 on / type ext4 (ro,seclabel,nodev,relatime,errors=panic)
+=== LDSPOOF_FILES ===
+-rw-r--r-- 1 root root 182 2026-11-03 15:35 /system/etc/init/ldspoof.rc
+-rw-r--r-- 1 root root 928 2026-11-03 15:35 /system/etc/ldspoof.sh
+=== LDSPOOF_RC ===
+service ldspoof /system/bin/sh /system/etc/ldspoof.sh
+    user root
+    group root
+    seclabel u:r:su:s0
+    oneshot
+    disabled
+
+on property:sys.boot_completed=1
+    start ldspoof=== LDSPOOF_SH ===
+#!/system/bin/sh
+# LDPlayer14 real-device spoof - post-boot runtime props (applied after ldinit)
+setprop ro.product.brand Redmi
+setprop ro.product.name garnet_global
+setprop ro.product.board parrot
+setprop ro.product.device garnet
+setprop ro.board.platform parrot
+setprop phone.productname garnet
+setprop ro.build.characteristics nosdcard
+setprop ro.build.flavor missi_phone_global-user
+setprop ro.build.fingerprint "Redmi/garnet_global/garnet:14/UKQ1.231003.002/V816.0.6.0.UNRMIXM:user/release-keys"
+setprop ro.build.description "missi_phone_global-user 14 UKQ1.231003.002 V816.0.6.0.UNRMIXM release-keys"
+setprop ro.boot.qemu 0
+setprop ro.bootimage.build.fingerprint "Redmi/garnet_global/garnet:14/UKQ1.231003.002/V816.0.6.0.UNRMIXM:user/release-keys"
+setprop ro.bootimage.build.id UKQ1.231003.002
+setprop ro.bootimage.build.version.incremental V816.0.6.0.UNRMIXM
+setprop ro.serialno a68563e7
+setprop ro.boot.serialno a68563e7=== EMULATOR_FILE_SCAN ===
+/system/vendor/lib64/hw/android.hardware.audio@7.1-impl.ranchu.so
+/system/vendor/lib64/hw/android.hardware.audio.legacy@7.1-impl.ranchu.so
+/system/vendor/lib/hw/android.hardware.audio@7.1-impl.ranchu.so
+/system/vendor/lib/hw/android.hardware.audio.legacy@7.1-impl.ranchu.so
+/system/vendor/etc/vintf/manifest/android.hardware.audio@7.1-impl.ranchu.xml
+/system/system_ext/bin/init.qemu-adb-keys.sh
+=== DEV_NODES ===
+ls: /dev/qemu*: No such file or directory
+ls: /dev/goldfish*: No such file or directory
+ls: /dev/socket/qemud: No such file or directory
+ls: /dev/socket/goldfish*: No such file or directory
+=== HOUDINI ===
+-rwxr-xr-x 1 root shell    9260 2026-09-15 19:23 /system/bin/houdini
+-rwxr-xr-x 1 root shell    9784 2026-09-15 19:23 /system/bin/houdini64
+lrw-r--r-- 1 root root       25 2026-09-15 19:23 /system/lib/libhoudini.so -> /vendor/lib/libhoudini.so
+lrw-r--r-- 1 root root       27 2026-09-15 19:23 /system/lib64/libhoudini.so -> /vendor/lib64/libhoudini.so
+-rw-r--r-- 1 root root  9402456 2026-09-15 19:23 /system/vendor/lib64/libhoudini.so
+=== CPUINFO ===
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 79
+model name	: Intel(R) Xeon(R) CPU E5-2696 v4 @ 2.20GHz
+stepping	: 1
+cpu MHz		: 2194.914
+cache size	: 56320 KB
+physical id	: 0
+siblings	: 6
+core id		: 0
+cpu cores	: 6
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 20
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx rdrand hypervisor lahf_lm abm 3dnowprefetch invpcid_single ibrs ibpb stibp fsgsbase invpcid rdseed flush_l1d
+bugs		: cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf mds swapgs itlb_multihit mmio_stale_data bhi
+bogomips	: 4391.73
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 79
+model name	: Intel(R) Xeon(R) CPU E5-2696 v4 @ 2.20GHz
+stepping	: 1
+cpu MHz		: 2194.914
+cache size	: 56320 KB
+physical id	: 0
+siblings	: 6
+core id		: 1
+cpu cores	: 6
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 20
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx rdrand hypervisor lahf_lm abm 3dnowprefetch invpcid_single ibrs ibpb stibp fsgsbase invpcid rdseed flush_l1d
+=== VERSION ===
+Linux version 5.15.178+ (nobody@android-build) (Android (10087095, +pgo, +bolt, +lto, -mlgo, based on r487747c) clang version 17.0.2 (https://android.googlesource.com/toolchain/llvm-project d9f89f4d16663d5012e5c09495f3b30ece3d2362), LLD 17.0.2) #1 SMP PREEMPT Mon Sep 21 11:57:25 CST 2026
+=== PRODUCT_PROPS ===
+[phone.adip]: []
+[phone.androidid]: [52a2e4f010ba5eda]
+[phone.androidid_modify]: [1]
+[phone.audio_out_rate]: [48000]
+[phone.contentsize]: [1]
+[phone.disk_ssd]: [1]
+[phone.feature_blanced]: [1]
+[phone.feature_blanced_new]: [1]
+[phone.first]: [1]
+[phone.height]: [900]
+[phone.imei]: [358022023156039]
+[phone.imsi]: [460009110363651]
+[phone.index]: [0]
+[phone.jkchess.orig]: [0]
+[phone.lanucherDownload]: [1]
+[phone.mechineid]: [bec60ffe49e62105386e9ffe8752b949]
+[phone.multi_count]: [2]
+[phone.net_operatorname]: [CHINA MOBILE]
+[phone.new_device]: [0]
+[phone.number]: []
+[phone.oaid]: []
+[phone.openid]: [9999]
+[phone.pc_mac]: [AA1C0423D60E_02004C4F4F50]
+[phone.plugin]: [0]
+[phone.pointers]: [mistsequencech]
+[phone.productname]: [garnet]
+[phone.resolution]: [1]
+[phone.running_count]: [1]
+[phone.sgzzlb_protect]: [1]
+[phone.sim_cid]: [32305]
+[phone.sim_country]: [cn]
+[phone.sim_lac]: [1028]
+[phone.sim_operator]: [46000]
+[phone.sim_operatorname]: [China Mobile GSM]
+[phone.simserial]: [89860051854007097612]
+[phone.suportQQMiniGame]: [1]
+[phone.suportWeiXinMiniGame]: [1]
+[phone.version]: [1400002900]
+[phone.width]: [1600]
+[phone.x64]: [1]
+[phone.zyte.crc]: [616b3a6e]
+[ro.boot.bootreason]: [reboot]
+[ro.boot.console]: [tty0]
+[ro.boot.hardware]: [qcom]
+[ro.boot.qemu]: [0]
+[ro.boot.selinux]: [permissive]
+[ro.boot.serialno]: [a68563e7]
+[ro.boot.verifiedbootstate]: [green]
+[ro.build.description]: [missi_phone_global-user 14 UKQ1.231003.002 V816.0.6.0.UNRMIXM release-keys]
+[ro.build.fingerprint]: [Redmi/garnet_global/garnet:14/UKQ1.231003.002/V816.0.6.0.UNRMIXM:user/release-keys]
+[ro.build.flavor]: [missi_phone_global-user]
+[ro.build.id]: [UKQ1.231003.002]
+[ro.build.tags]: [release-keys]
+[ro.build.type]: [user]
+[ro.build.version.all_codenames]: [REL]
+[ro.build.version.base_os]: []
+[ro.build.version.codename]: [REL]
+[ro.build.version.incremental]: [V816.0.6.0.UNRMIXM]
+[ro.build.version.known_codenames]: [Base,Base11,Cupcake,Donut,Eclair,Eclair01,EclairMr1,Froyo,Gingerbread,GingerbreadMr1,Honeycomb,HoneycombMr1,HoneycombMr2,IceCreamSandwich,IceCreamSandwichMr1,JellyBean,JellyBeanMr1,JellyBeanMr2,Kitkat,KitkatWatch,Lollipop,LollipopMr1,M,N,NMr1,O,OMr1,P,Q,R,S,Sv2,Tiramisu,UpsideDownCake]
+[ro.build.version.min_supported_target_sdk]: [28]
+[ro.build.version.preview_sdk]: [0]
+[ro.build.version.preview_sdk_fingerprint]: [REL]
+[ro.build.version.release]: [14]
+[ro.build.version.release_or_codename]: [14]
+[ro.build.version.release_or_preview_display]: [14]
+[ro.build.version.sdk]: [34]
+[ro.build.version.security_patch]: [2024-02-05]
+[ro.dalvik.vm.enable_uffd_gc]: [false]
+[ro.dalvik.vm.isa.arm]: [x86]
+[ro.dalvik.vm.isa.arm64]: [x86_64]
+[ro.dalvik.vm.native.bridge]: [libhoudini.so]
+[ro.hardware]: [qcom]
+[ro.hardware.audio.tinyalsa.host_latency_ms]: [80]
+[ro.hardware.audio.tinyalsa.period_count]: [4]
+[ro.hardware.audio.tinyalsa.period_size_multiplier]: [2]
+[ro.hardware.egl]: [adreno]
+[ro.hardware.vulkan]: [adreno]
+[ro.opengles.max]: [196609]
+[ro.opengles.version]: [196609]
+[ro.product.board]: [parrot]
+[ro.product.bootimage.brand]: [Redmi]
+[ro.product.bootimage.device]: [garnet]
+[ro.product.bootimage.manufacturer]: [Xiaomi]
+[ro.product.bootimage.model]: [2312DRA50G]
+[ro.product.bootimage.name]: [garnet_global]
+[ro.product.brand]: [Redmi]
+[ro.product.cpu.abi]: [x86_64]
+[ro.product.cpu.abilist]: [x86_64,arm64-v8a,x86,armeabi-v7a,armeabi]
+[ro.product.cpu.abilist32]: [x86,armeabi-v7a,armeabi]
+[ro.product.cpu.abilist64]: [x86_64,arm64-v8a]
+[ro.product.cpu.pagesize.max]: [4096]
+[ro.product.device]: [garnet]
+[ro.product.first_api_level]: [28]
+[ro.product.locale]: [en-US]
+[ro.product.locale.language]: [zh]
+[ro.product.locale.region]: [CN]
+[ro.product.manufacturer]: [XIAOMI]
+[ro.product.model]: [2509FPN0BC]
+[ro.product.name]: [garnet_global]
+[ro.product.odm.brand]: [Redmi]
+[ro.product.odm.device]: [garnet]
+[ro.product.odm.manufacturer]: [Xiaomi]
+[ro.product.odm.model]: [2312DRA50G]
+[ro.product.odm.name]: [garnet_global]
+[ro.product.system.brand]: [Redmi]
+[ro.product.system.device]: [garnet]
+[ro.product.system.manufacturer]: [Xiaomi]
+[ro.product.system.model]: [2312DRA50G]
+[ro.product.system.name]: [garnet_global]
+[ro.product.system_ext.brand]: [Xiaomi]
+[ro.product.system_ext.device]: [unicorn]
+[ro.product.system_ext.manufacturer]: [Google]
+[ro.product.system_ext.model]: [AOSP]
+[ro.product.system_ext.name]: [unicorn]
+[ro.product.vendor.brand]: [Redmi]
+[ro.product.vendor.device]: [garnet]
+[ro.product.vendor.manufacturer]: [Xiaomi]
+[ro.product.vendor.model]: [2312DRA50G]
+[ro.product.vendor.name]: [garnet_global]
+[ro.product.vendor_dlkm.brand]: [Redmi]
+[ro.product.vendor_dlkm.device]: [garnet]
+[ro.product.vendor_dlkm.manufacturer]: [Xiaomi]
+[ro.product.vendor_dlkm.model]: [2312DRA50G]
+[ro.product.vendor_dlkm.name]: [garnet_global]
+=== SETTINGS ===
+e48fee1f4106d2d2
+2509FPN0BC
+DA:4C:10:DE:17:02
+00:db:15:dc:61:1f
+=== SENSORS ===
+Captured at: 19:56:35.667
+Sensor Device:
+Total 8 h/w sensors, 8 running 0 disabled clients:
+0x00000000) active-count = 2; sampling_period(ms) = {200.0, 200.0}, selected = 200.00 ms; batching_period(ms) = {2000.0, 100.0}, selected = 0.00 ms
+Sensor List:
+0000000000) LSM330 Accelerometer      | STMicroelectronics | ver: 1 | type: android.sensor.accelerometer(1) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000001) Linear Acceleration       | QTI             | ver: 2 | type: android.sensor.linear_acceleration(10) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000002) Magnetometer              | AKM             | ver: 1 | type: android.sensor.magnetic_field(2) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000003) Orientation               | Yamaha          | ver: 1 | type: android.sensor.orientation(3) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000004) Gravity                   | QTI             | ver: 2 | type: android.sensor.gravity(9) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000005) Gyroscope                 | STMicroelectronics | ver: 1 | type: android.sensor.gyroscope(4) | perm: n/a | flags: 0x00000000
+	continuous | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x00000006) Proximity sensor          | AMS TAOS        | ver: 2 | type: android.sensor.proximity(8) | perm: n/a | flags: 0x00000003
+	on-change | minRate=5.00Hz | maxRate=5.00Hz | no batching | wakeUp | 
+0x00000007) Light sensor              | AMS TAOS        | ver: 1 | type: android.sensor.light(5) | perm: n/a | flags: 0x00000002
+	on-change | minRate=5.00Hz | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f636779) Corrected Gyroscope Sensor | AOSP            | ver: 1 | type: android.sensor.gyroscope(4) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f676172) Game Rotation Vector Sensor | AOSP            | ver: 3 | type: android.sensor.game_rotation_vector(15) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f676273) Gyroscope Bias (debug)    | AOSP            | ver: 1 | type: android.sensor.accelerometer(1) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f67656f) GeoMag Rotation Vector Sensor | AOSP            | ver: 3 | type: android.sensor.geomagnetic_rotation_vector(20) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f677276) Gravity Sensor            | AOSP            | ver: 3 | type: android.sensor.gravity(9) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f6c696e) Linear Acceleration Sensor | AOSP            | ver: 3 | type: android.sensor.linear_acceleration(10) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f726f76) Rotation Vector Sensor    | AOSP            | ver: 3 | type: android.sensor.rotation_vector(11) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+0x5f797072) Orientation Sensor        | AOSP            | ver: 1 | type: android.sensor.orientation(3) | perm: n/a | flags: 0x00000000
+	continuous | maxDelay=0us | maxRate=5.00Hz | no batching | non-wakeUp | 
+Fusion States:
+9-axis fusion disabled (0 clients), gyro-rate= 200.00Hz, q=< 0, 0, 0, 0 > (0), b=< 0, 0, 0 >
+game fusion(no mag) disabled (0 clients), gyro-rate= 200.00Hz, q=< 0, 0, 0, 0 > (0), b=< 0, 0, 0 >
+geomag fusion (no gyro) disabled (0 clients), gyro-rate= 200.00Hz, q=< 0, 0, 0, 0 > (0), b=< 0, 0, 0 >
+Recent Sensor events:
+LSM330 Accelerometer: last 50 events
+	 1 (ts=42.162763135, wall=19:56:25.642) 0.15, 9.74, 1.43, 
+	 2 (ts=42.363185631, wall=19:56:25.842) 0.13, 9.75, 1.45, 
+	 3 (ts=42.563630986, wall=19:56:26.042) 0.15, 9.71, 1.51, 
+	 4 (ts=42.765082161, wall=19:56:26.244) 0.17, 9.78, 1.42, 
+	 5 (ts=42.965782769, wall=19:56:26.445) 0.16, 9.74, 1.48, 
+	 6 (ts=43.166948950, wall=19:56:26.646) 0.18, 9.77, 1.47, 
+	 7 (ts=43.368365585, wall=19:56:26.847) 0.14, 9.72, 1.44, 
+	 8 (ts=43.569413030, wall=19:56:27.048) 0.14, 9.77, 1.52, 
+	 9 (ts=43.771786548, wall=19:56:27.251) 0.12, 9.79, 1.43, 
+	10 (ts=43.974345033, wall=19:56:27.453) 0.16, 9.78, 1.48, 
+	11 (ts=44.176189260, wall=19:56:27.655) 0.14, 9.74, 1.47, 
+	12 (ts=44.377384272, wall=19:56:27.856) 0.14, 9.77, 1.48, 
+	13 (ts=44.579623682, wall=19:56:28.059) 0.13, 9.80, 1.45, 
+	14 (ts=44.780214506, wall=19:56:28.259) 0.12, 9.78, 1.51, 
+	15 (ts=44.980897000, wall=19:56:28.460) 0.19, 9.80, 1.51, 
+	16 (ts=45.181559351, wall=19:56:28.660) 0.10, 9.80, 1.44, 
+	17 (ts=45.382227456, wall=19:56:28.861) 0.11, 9.80, 1.51, 
+	18 (ts=45.585134435, wall=19:56:29.064) 0.13, 9.71, 1.47, 
+	19 (ts=45.785392007, wall=19:56:29.264) 0.19, 9.80, 1.51, 
+	20 (ts=45.986332506, wall=19:56:29.465) 0.16, 9.73, 1.49, 
+	21 (ts=46.191140741, wall=19:56:29.670) 0.17, 9.77, 1.48, 
+	22 (ts=46.391490206, wall=19:56:29.870) 0.18, 9.79, 1.51, 
+	23 (ts=46.594814046, wall=19:56:30.074) 0.14, 9.79, 1.50, 
+	24 (ts=46.799112461, wall=19:56:30.278) 0.16, 9.71, 1.43, 
+	25 (ts=46.999679492, wall=19:56:30.478) 0.12, 9.77, 1.43, 
+	26 (ts=47.208718875, wall=19:56:30.688) 0.17, 9.74, 1.48, 
+	27 (ts=47.409773564, wall=19:56:30.889) 0.18, 9.76, 1.43, 
+	28 (ts=47.611288513, wall=19:56:31.090) 0.16, 9.79, 1.43, 
+	29 (ts=47.811758222, wall=19:56:31.291) 0.17, 9.75, 1.43, 
+	30 (ts=48.013362896, wall=19:56:31.492) 0.16, 9.71, 1.45, 
+	31 (ts=48.214131814, wall=19:56:31.693) 0.19, 9.75, 1.48, 
+	32 (ts=48.420190331, wall=19:56:31.899) 0.10, 9.74, 1.46, 
+	33 (ts=48.621371263, wall=19:56:32.100) 0.19, 9.79, 1.44, 
+	34 (ts=48.822700851, wall=19:56:32.301) 0.12, 9.72, 1.51, 
+	35 (ts=49.023213017, wall=19:56:32.502) 0.13, 9.74, 1.43, 
+	36 (ts=49.224090010, wall=19:56:32.703) 0.10, 9.72, 1.46, 
+	37 (ts=49.424790619, wall=19:56:32.904) 0.11, 9.76, 1.51, 
+=== PACKAGES ===
+=== SU_LIST ===
+ls: /sbin/su: No such file or directory
+lrwxr-xr-x 1 root shell    10 2026-09-15 19:23 /system/bin/su -> ../xbin/su
+-rwsr-x--x 1 root shell 60368 2026-09-15 19:23 /system/xbin/su
+running

@@ -1,0 +1,65 @@
+﻿=== BOOT ===
+1
+=== IDENTITY ===
+ro.product.model                              = 2312DRA50G
+ro.product.manufacturer                       = Xiaomi
+ro.product.brand                              = Redmi
+ro.product.device                             = garnet
+ro.product.name                               = garnet_global
+ro.product.board                              = parrot
+ro.board.platform                             = parrot
+ro.build.fingerprint                          = Redmi/garnet_global/garnet:14/UKQ1.231003.002/V816.0.6.0.UNRMIXM:user/release-keys
+ro.build.description                          = missi_phone_global-user 14 UKQ1.231003.002 V816.0.6.0.UNRMIXM release-keys
+ro.build.characteristics                      = nosdcard
+ro.build.flavor                               = missi_phone_global-user
+ro.boot.qemu                                  = 0
+ro.boot.serialno                              = 4b7c9d21
+ro.serialno                                   = 4b7c9d21
+ro.product.system_ext.model                   = 2312DRA50G
+ro.product.system_ext.device                  = garnet
+ro.product.system_ext.manufacturer            = Xiaomi
+ro.system_ext.build.fingerprint               = Redmi/garnet_global/garnet:14/UKQ1.231003.002/V816.0.6.0.UNRMIXM:user/release-keys
+phone.productname                             = garnet
+=== SU ===
+ls: /system/xbin/su: No such file or directory
+ls: /system/bin/su: No such file or directory
+ls: /sbin/su: No such file or directory
+=== CPUINFO (first 6 lines) ===
+processor	: 0
+BogoMIPS	: 38.40
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0xd
+=== CPUINFO MOUNT ===
+/dev/block/sda2 on /proc/cpuinfo type ext4 (ro,seclabel,nodev,relatime,errors=panic)
+/dev/block/sdb2 on /system/vendor/lib64/arm64/cpuinfo type ext4 (rw,seclabel,nosuid,nodev,noatime,errors=panic)
+/dev/block/sdb2 on /system/vendor/lib/arm/cpuinfo type ext4 (rw,seclabel,nosuid,nodev,noatime,errors=panic)
+=== QEMU FILES ===
+ls: /system/system_ext/bin/init.qemu-adb-keys.sh: No such file or directory
+/system/vendor/lib64/hw/android.hardware.audio@7.1-impl.ranchu.so
+/system/vendor/lib64/hw/android.hardware.audio.legacy@7.1-impl.ranchu.so
+/system/vendor/lib/hw/android.hardware.audio@7.1-impl.ranchu.so
+/system/vendor/lib/hw/android.hardware.audio.legacy@7.1-impl.ranchu.so
+/system/vendor/etc/vintf/manifest/android.hardware.audio@7.1-impl.ranchu.xml
+=== DEV NODES ===
+ls: /dev/qemu*: No such file or directory
+ls: /dev/goldfish*: No such file or directory
+ls: /dev/socket/qemud: No such file or directory
+=== SETTINGS ===
+b56f8672c393fb04
+2312DRA50G
+DA:4C:10:DE:17:02
+2312DRA50G
+=== MAC ===
+3c:bd:3e:82:0c:c0
+=== LOCATION ===
+      last location=null
+      last location=null
+    gps provider:
+      last location=null
+    11-03 20:18:41.537: gps provider [u0] enabled
+    11-03 20:18:41.738: gps provider [u0] enabled
+=== PKG ===
+package:/data/app/~~e9W8ekdwvD6lSAGt1KP-6g==/com.nd.aqcenter-DXxklXdQMVWhwVOrOtfvTQ==/base.apk
+=== LDSPOOF LOG ===
