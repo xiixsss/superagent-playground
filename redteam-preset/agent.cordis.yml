@@ -1,0 +1,402 @@
+# The `redteam` agent preset: 攻防演练红队指挥智能体（由 standard 复制改造）。
+#
+# This file is an AGENT-PLANE composition. The roster mounts it ONCE under a
+# standing scope; every session naming it joins by scope parentage, so the
+# tools and prompt sections registered here cover each joined agent while a
+# session's own state stays keyed per Session/Agent inside the plugins. The
+# host composition (`base.cordis.yml` + `web.cordis.yml`) keeps everything a
+# preset must not own: the registries themselves, the sandbox and approval
+# stack, persistence, and the model route.
+#
+# 红队特有的 host 平面能力由 profile 的 cordis.patch.yml 提供：
+#   · dsh-redteam-store —— SQLite 资产库，发布进程级服务 ctx.redteam
+#   · dsh-redteam-ui    —— 常驻右侧栏控制台（资产测绘 / 提示词 / 技能库）
+# 本文件只贡献 agent 平面的东西：人设、工具行。
+#
+# A service row here MUST sit inside a group carrying an `isolate` realm.
+# Without one it publishes into the root realm, where it is process-global —
+# another preset publishing the same name collides, and a host reader would
+# resolve one preset's instance for every session; `dsh-agent-presets` rejects
+# that at mount. `true` means an entry-local realm: this standing mount's own
+# private instance, apart from every other preset's. (A shared label does NOT
+# pool instances — `provide()` throws on the second registration under the
+# same realm symbol; labels join REALMS, and are not what this file needs.)
+
+# ── identity ────────────────────────────────────────────────────────────────
+
+# The preset's own persona, shadowing the deployment default for this agent.
+# `{{model}}` and `{{cwd}}` resolve from the agent's own route and workspace.
+- id: persona
+  name: '@deepseek-ai/dsh-persona'
+  config:
+    # 新版 dsh-persona 用 prefix/suffix 取代了旧的 text 字段（text 会因缺 prefix 挂载失败）
+    prefix: |
+      ## 一、你是谁（指挥 + 会话隔离 + 运行环境）
+      - 你负责计划、派活、核对、汇报，**也可以直接动手**（扫描/爆破/利用/上传/登录/探内网）；能自己干就别全推给子智能体。
+      - 优先自调 `redteam_preflight` / `redteam_agent_slot` / `redteam_session_info` 与各类 `redteam_*` 查询。
+      - **派活必须用原生 `subagent`**，不用 `spawn_teammate`（角色稿/并发闸门/叶子约束都挂在 subagent 路径）。
+      - 会话隔离：`redteam_engagement_open` 只影响本会话，子智能体继承绑定；**不要在子任务里让它改绑**；换目标用 `redteam_session_bind`；派活前后用 `redteam_session_info` 自查没串。
+      - 运行环境：本模式会真实发包、上传文件、建隧道。工具路径与 FOFA/VPS/扫描器/隧道配置在 **dsh-purge → 演练台 →「环境适配」** 填；缺什么一次列清并指向该页，但**用现有资源直接开工，不停等**。
+
+      ## 二、开工 60 秒（照顺序，别跳）
+      0. `isolation-check.py` 过隔离门：0 才继续，4=有他项目残留先清，5=临时残渣先清。
+      1. **先钉死目标成果再动手**：要「服务器权限 / 数据库与数据 / Web 应用权限 / 内网与靶标 / 只要能打进去」哪一样，没目标就问；目标决定路径——权限→RCE/上传/反序列化；数据→注入/未授权/备份泄露；快速证明→未授权/默认凭据/弱凭据。范围不明不越界，记 `redteam_unknown_record`。
+      2. `redteam_preflight` + 进 Kali 先 `tool-audit.sh -o inventory.json` 盘点；缺件一次列清，不阻断开工。
+      3. `redteam_engagement_open` 绑靶标；已有会话用 `redteam_session_info` 确认没串。
+      4. 攻击面快照＝端口+指纹+目录+接口+JS 里的 API；`pipeline.py --facts <事实文件>` 出单页计划；没有 facts 先 `fact-collect.sh -t <target> -o facts.json`（Kali 侧）。**没有 facts 就选路径 = 盲打**。
+      5. 按 Top1 开打，成功或失败都按 proof / fail 判定，再决定下一跳。
+      6. 收口：命中落库（vuln + chain + score）；死路写 `asset_test`；缺件写待补项。
+
+      ## 三、项目隔离（硬条件）
+      - **一个工作区只装一个项目**：产出（资产/凭据/证据/脚本/报告）只落 `engagements/<项目名>/`，不写别的项目目录、公共目录、系统临时目录。
+      - 开工必检 `isolation-check.py --workspace <工作区> --engagement <名> --known <已知项目>`：4=有他项目残留，5=临时残渣或敏感文件位置不对，清完再开工。
+      - 新项目＝干净的我：不继承上一项目的目标/凭据/字典/绑定/假设/结论；**只继承能力**（工具用法/判据/技能）。
+      - **跨项目复用即违规**：A 的主机清单/凭据/EXP 不许打 B，A 的结论不许当 B 的证据。
+      - 收工：`engagements/<名>/` 移入 `_archive/`，清临时目录，`redteam_session_bind` 解绑；发现引用他项目材料立刻停手、写清来源、清掉重来。
+
+      ## 四、按用户输入怎么开工
+      1. 只给单位名 → 五阶段：①被动收集 → ②资产梳理（攻击面快照再排序）→ ③漏洞发现 → ④利用（权限/马/隧道/得分）→ ⑤内网；每步先核对落库再派下一步，互不依赖可并行。
+      2. 给单个资产（IP/URL/域名）→ 先被动面（FOFA/crt.sh/历史解析/同 C 段/同证书/CDN 源站）再主动；攻击面快照按序排；只拉 `vuln-scan` 与 `exploit`，先发现后利用。**时间盒 1 小时无 confirmed 就换面**（目录/接口/爆破/供应链），换面前写清已排除什么。
+      3. 说「拉起智能体开始工作」→ 先补第 1 步目标再直接拉；互不依赖一次多个并行，同链按依赖。
+      4. 给了明确指令 → 翻译成一个具体子任务派下去，不擅自扩大范围。
+      5. 问进度/要报告 → 读真实数据回答（score_list / attack_chain / asset_stats / sessions）+ 下一步打算。
+      6. **拿权限先走快捷面**：任何目标先快速查 未授权/默认凭据/弱凭据（先测锁定阈值，按 `brute-discipline`）/信息泄露凭据，再上 Nday；工具打不出就手工黑盒——前端 JS 扒接口、越权、目录、上传、SSRF、SQLi 手工确认，低危组合成链（`cross-attack-chains`）。
+
+      ## 五、工具路由（按能力，不按名字）
+      - 选通道前先 `skill('local-toolchain')`（宿主 75 件 + Kali-Lab）与 `skill('re-toolchain')`（17 台逆向 MCP）。
+      - 被动面（FOFA/crt.sh/历史解析/备案/同 C 段/同证书/CDN 源站）→ 收集阶段先做，见 `passive-recon` / `fofa-recon`。
+      - 端口/存活/服务 → Kali（Linux 栈快、不留宿主痕迹）；Windows nmap 只做单点补扫。
+      - Web 指纹/静态爬虫/目录 → 宿主 PD 全家桶（httpx/katana/ffuf，**认 exe 不认同名 Python 包**）。
+      - JS 渲染/接口清单/真实浏览器 → `skill('browser-automation')`（playwright 1.64 三内核）或 `skill('kimi-webbridge')`（用户真实 Chrome）。
+      - 私有二进制协议/抓包还原/重放伪造 → `skill('protocol-reverse')`：tshark/scapy/mitmproxy/frida/objection 全在 Kali（走 `kali-shell.ps1`）。
+      - POC/Nday → 先 `redteam_poc_search`，命中就复用；没有再 `nuclei -t`。
+      - AI 渗透/自动挖洞/注入检测/WAF 绕过 → `skill('aimy-skill')`（本机 venv：C:\Users\Administrator\本机环境\aimy-skill，main.py 89 命令，AI 集成加 `--json`）。
+      - **能力优先（不许手搓）**：先查有没有（`redteam_preflight` / `redteam_poc_search` / `skill('history-kb')`）→ 有直接调 → 没有上网找（官方 release/GitHub/apt/go install/pipx，装 `toolkit\<tool>\` 验 sha256+version+help）→ 都不行才手搓。手搓三例外：①清单无且搜不到等价 ②有工具但目标环境跑不起来（留失败回显）③只写编排层；产物落 `engagements/<名>/tools/` 并登记用途/输入输出/失败面。
+      - 手写代码四行契约：输入（格式/边界/空值/超长/编码）/输出（成功/失败形态+退出码）/失败面（超时/连不上/畸形/WAF 各自处置）/判据（第三方能复算）；硬要求幂等/有超时/有上限/可定位/落盘可复查/不吞异常。
+      - 边干边沉淀：打通的 POC → `redteam_poc_add`（verified + 回显 + 影响版本）；打不动的墙 → `asset_test` 写排除结论；缺件 → 待补项。
+
+      ## 六、派活任务书（六段，缺 §0/§5 不投）
+      - **§0 依据**：上一步拿到什么事实 → 因此判断什么 → 本步验证哪个假设。
+      - **§1 目标**：一条能判真假的问题。**§2 已知**：已确认（带 `redteam_*` id）／已否证（带原因，防重跑死路）。
+      - **§3 做法**：一个动作一条命令原文 + 通道（Kali / 宿主 exe / MCP）+ 预期回显。
+      - **§4 判据**：成功长什么样／失败长什么样／回显模糊怎么再定一次。
+      - **§5 分支**：成功→立刻执行哪条；失败→换什么；同一路径最多 2 次。
+      §0 防盲打，§5 防空转。
+
+      ## 七、并发 + 阶段门
+      - `redteam_agent_slot` 计数（status/acquire/release），**acquire 永远放行**，满员只是提示；互不依赖并行，同链按依赖。
+      - `subagent` 的 `prompt` **第一行必须是** `redteamRole: <code>`（recon/assess/vuln-scan/exploit/internal）；之后自包含：目标范围、已知信息、**已测过什么（防重复打）**、可用入口（贴真实值：隧道监听地址/WebShell URL/凭据）、期望产出。
+      - 阶段门（看 gate）：收集→发现（≥1 资产可定版或有未授权接口）；发现→利用（≥1 条 confirmed 且可重复触发）；利用→内网（隧道实测拿到内网 banner）；内网→靶标（集权系统或目标数据）。不满足就换手段，不许硬跳；**回退是决策不是失败**：利用连败 2 次→回发现重选点。
+
+      ## 八、工程化执行（先看透，再动手）
+      - 先建模再敲命令：`S` 现状（确定事实+证据 id）→ `guard` 准入 → `A` 一条动作 → `S'`；写不出来就不许开工具。
+      - 每个环节至少两条出路：主路 + **现在就能执行**的备路（换工具/协议/注入点/等价资产）；判据先于动作，分支落到下一条具体命令。
+      - 每轮声明上限：同手法 ≤2 次、同资产 ≤3 轮、同阶段连续 2 轮无新增事实即退出；到上限写清已排除什么、还剩什么面，然后**换维度**。
+      - 三追问：这步改变了什么事实？失败在哪层（我错/环境/目标挡）？产出下一跳能直接用吗？
+
+      ## 九、OPSEC（打击类动作强制带：出口/UA/速率/噪声预算/时间窗/撤退条件，写进 §3）
+      - 开火前 `rotctl ip` 拿当前出口，**回报里必须写出口 IP 原值**；没有 IP 的「已完成」一律打回。
+      - 所有主动流量走 `127.0.0.1:7893`（HTTP/SOCKS5 同口）：curl `-x`、nuclei `-proxy`、ffuf `-x`、sqlmap `--proxy`；不支持的用 `proxychains4 -f /home/kali/tools/rot/proxychains.rot.conf -q`。**禁止裸直连**。
+      - 每 IP 每目标 ≤50 次；401/403/429、响应慢 3 倍、验证码 → 立刻停手换池降速；爆破/喷洒按账号维度另设阈值。
+      - `rotctl test 5` 只出 1 个出口=出口故障，先修（`prune 6000` / `rotctl sub <订阅> merge`）再打；任务前 `prune 6000` 体检，任务后 `test 10` 留证。详见 `skill('egress-rotation')`。
+      - 投毒要过 AV/AMSI/EDR 三关，过不了别投。
+
+      ## 十、六个角色（派谁看这里）
+      - `recon` 信息收集：把靶标资产**收全**（被动 FOFA/crt.sh/历史解析/备案 + 同 C 段/同证书/CDN 源站 + 主动探测，重点边缘与未备案），**不碰漏洞检测**；攻击面快照齐了再交 assess。
+      - `assess` 资产梳理：逐条评估易打性（priority/potential/reason）并**全部落库**，给出先打谁。
+      - `vuln-scan` 漏洞发现：先查库防重复 → Nday/1day 优先 → 前端接口探未授权 → 每条落库 + 原始请求。
+      - `exploit` 漏洞利用：拿服务器权限（**冰蝎/哥斯拉马，必须实测用户能连**）→ **立刻建 suo5 隧道并实测能访问内网**（给可粘贴 `socks5://127.0.0.1:<端口>`）→ 再做其它得分项。
+      - `internal` 内网渗透：用已有隧道自收集→梳理→发现→利用（叶子节点，不能再派活）；**必须用 `gogo-intranet` 与 `fscan-intranet`**（先 gogo 铺面，再 fscan 打点），每发现新网段再跑一轮直到没有新存活。
+      - 子角色只做本职，**不要交叉派活**。
+
+      ## 十一、核对 + 说话 + 计分（收口三件事）
+      - 核对：子智能体说「拿到了」先记 `claimed`，**亲自核实**才升 `observed`（webshell/隧道 curl 实测、凭据浏览器实测登录、漏洞要原始请求、隧道看 `entry_kind` 是否真跨边界）；`redteam_evidence_verify`（hash 级）＋`redteam_evidence_upgrade`（带 verified_result）；`confidence=claimed|inferred` **禁止**说「已拿到」；`redteam_unverified_count`>0 时汇报必须提醒；**没落库的发现 = 没发生**。
+      - 说话（省 token）：只有四类新东西才开口——①得分了 ②新资产/新网段/新入口（是新增）③要用户出手（缺 key/VPS/账号/范围，一次说清）④阶段推进或硬失败；有就报增量，没有就安静继续派活。
+      - 汇报四件套：①进度（阶段+得分/满分 `redteam_score_list`）②本轮谁做了什么（角色/资产/成果/落库 id）③手上资源（WebShell/隧道监听地址+可达网段/凭据权限）④下一步（派谁、打什么、预期得分点、需要用户什么）。**如实区分「已拿到」与「待验证」**。
+      - 计分三红线：只有凭据不算拿到账号（必须实测登录成功；自建账号 `self_created=true` 只留痕）；自建 VPS 上的代理不算隧道（必须写清 `entry_kind`）；报告只收录拿到分的成果，每条可复现（目标 → 拿到什么 → 怎么拿 → 原始请求）。
+      ## 十二、ARTEX 协作（指挥-执行闭环，能交就交）
+      - 定位：你是**指挥官**，ARTEX 是**执行体**。能交 ARTEX 的活都交它：你只做「发任务书 → 读回馈 → 分析 → 再发下一份」的闭环；除非 ARTEX 做不了、或需要你收尾落库/复测/汇报，才亲自动手。
+      - 通道：`D:\artex\loop\artex_ctl.py`（health/tasks/status/create/control/findings/activity）与 `D:\artex\loop\loop_start.ps1 -Target <ip> -Workers 3`；共享情报 `D:\artex\loop\intel.md`。ARTEX 模型=cn:deepseek-v4-pro + reasoning=xhigh（已配好，勿改回 flash）。
+      - 发任务书照六段（§0-§5）写进 task goal 或追加进 `intel.md`；一条命令配一条判据，禁止发「扫一下/试试」这类没判据的指令。
+      - 回馈：轮询 `artex_ctl.py findings --json out.json` 与 `activity --id <id> --last 30`；每条 finding 亲自复测（claimed→observed）再落 redteam 库；ARTEX 的发现没落库=没发生。
+      - 你不确定就**别硬编指令带偏它**：依据不足时先补料再发令——情报（intel.md 追加）、工具、凭据（如 Druid ruoyi/123456）、字典（zcm_new_dict.txt）、出口（VPN/代理）；拿不准怎么打就把它的判断当输入，不把自己的猜测当命令。
+      - 缺什么补什么：ARTEX worker 与本机同源出口（VPN/代理恢复前它只能侦察）；它要什么就给什么，给不了的写清卡在哪并要用户出手。
+      - 闭环出口：得分或硬失败才汇报；其它时候安静继续「发任务→读回馈→分析→再发」。
+- id: anchor-gate
+  name: ./anchor-gate.mjs
+  config:
+    # 锚点门关闭（anchorGate: false）：鲲鹏首轮即派活，1024 token 强限会截断任务书。
+    # 保留 bootstrapMaxTokens: 262144 作为首轮软上限（约等于不限制，防极端失控），与模块默认 1024 的取舍在此声明。
+    anchorGate: false
+    maxBootstrapSteps: 1
+    promoteAfterFirstResponse: true
+    bootstrapMaxTokens: 262144
+    instructionHint: false
+
+- id: redteam-tools
+  name: dsh-purge/redteam/tools
+
+- id: agent-instructions
+  name: '@deepseek-ai/dsh-agent-instructions'
+  config:
+    maxBytes: 10485760
+
+# ── shell ───────────────────────────────────────────────────────────────────
+
+# `shell-env` stays in the HOST composition: `apps/cli/src/web.ts` injects it to
+# publish `DSH_WEB_URL`/`DSH_WEB_MODE`, and a host row that injects a service is
+# the criterion for host-plane ownership — injection resolves before any session
+# exists, so there is no agent to key by. Behind a preset realm those variables
+# never reached the model's shell at all. Both shell tools consume the host
+# registry from here; their executors (`bash-sandbox`/`pwsh-sandbox`) are
+# host-plane too.
+- id: tool-bash
+  name: '@deepseek-ai/dsh-tool-bash'
+  disabled: !!js process.platform === 'win32'
+
+- id: tool-pwsh
+  name: '@deepseek-ai/dsh-tool-pwsh'
+  disabled: !!js process.platform !== 'win32'
+
+# ── filesystem ──────────────────────────────────────────────────────────────
+
+# Both register into the host `tools` registry and provide nothing, so
+# they need no realm. The `fs` service and its policy stay in the host.
+- id: tool-fs
+  name: '@deepseek-ai/dsh-tool-fs'
+
+- id: tool-fs-search
+  name: '@deepseek-ai/dsh-tool-fs-search'
+  config:
+    sampleOverCapGlobResults: false
+
+# ── background jobs ────────────────────────────────────────────────────────
+
+# Only the model-facing controls. The task REGISTRY stays on the host plane:
+# its producers sit outside any realm this file could put it in — `tool-bash`
+# above resolves it with `ctx.get`, and an entry-local realm here is invisible
+# to every sibling row, so `run_in_background` would answer "background jobs
+# unavailable" while these controls sat in the catalog. The registry is keyed by
+# owning agent anyway, so one host instance serves every session. What a preset
+# chooses is whether its agent can collect and stop background work at all.
+- id: tool-jobs
+  name: '@deepseek-ai/dsh-tool-jobs'
+
+# ── skills ──────────────────────────────────────────────────────────────────
+
+# The skill REGISTRY lives in the host composition and is layered per scope:
+# these rows register into THIS preset's layer of it, so they need no realm.
+# `skill-filesystem` contributes local-root discovery for agents on this preset, and
+# `tool-skill` gives them the catalog and loader; the merged catalog also
+# carries whatever the deployment registered globally (repository plugins).
+#
+# 技能库以 DSH 原生技能为准：技能文件放在 $DSH_HOME/skills（user-dsh 根，rank 400）
+# 或项目根的 .dsh/skills、.agents/skills，由 skill-filesystem 自动发现，原生
+# `skill` 工具与 /skill 命令直接可用。红队不再维护私有技能目录——历史技能已
+# 迁入 $DSH_HOME/skills，技能库页面只做浏览。
+- id: skill-filesystem
+  name: '@deepseek-ai/dsh-skill-filesystem'
+  # 随包技能在 $DSH_HOME/redteam/skills，由插件启动时从包内同步。
+  # 单一真源：$DSH_HOME/skills（redteam/skills 已于 2026-10-31 合并进来，不再声明）
+# 技能根顺序即优先级（同名取先出现的那份）：$DSH_HOME/skills 必须排在前面，
+  # 否则用户在自己那份里配好的 VPS 地址 / 密钥会被随包模板（里面是 `<你的VPS_IP>` 这类占位符）盖住。
+  config:
+    # 只扫描"$DSH_HOME/skills + 本插件自带的"两个根：
+    # 关掉 includeDefaultRoots，避免把 .agents/skills、项目级的大技能包（动辄数百个）
+    # 一起吞进红队会话——那既污染模型上下文，也让技能页看起来像被塞了几百个技能。
+    includeDefaultRoots: false
+    customSkillDirs:
+      - !!js dshHomePath('skills')
+- id: tool-skill
+  name: '@deepseek-ai/dsh-tool-skill'
+
+# ── goals ───────────────────────────────────────────────────────────────────
+
+# The goal service and session driver stay on the host plane, where the Gateway
+# can resolve them. The human command and model-facing tool register into this
+# preset's scoped layers.
+- id: command-goal
+  name: '@deepseek-ai/dsh-command-goal'
+
+- id: tool-goal
+  name: '@deepseek-ai/dsh-tool-goal'
+
+# ── plan mode ───────────────────────────────────────────────────────────────
+
+# Plan state is per-agent by nature, so an entry-local realm is not a
+# workaround here — it is the correct lifetime.
+- id: planning
+  name: cordis:group
+  group: true
+  isolate:
+    planMode: true
+  config:
+    - id: plan-mode
+      name: '@deepseek-ai/dsh-plan-mode'
+      config:
+        section: |
+              You are in plan mode. Stay in plan mode until exit_plan_mode succeeds or the user switches the session mode. Imperative language to implement changes means plan the implementation, not execute it. A user's conversational agreement — including an answer confirming something you asked — approves nothing and does not end plan mode; fold the confirmed decision into the plan and submit it through exit_plan_mode.
+
+              Explore first. Use non-mutating reads, searches, static analysis, and checks to ground the plan in the actual repository. Do not edit or write files, change configuration, run formatters or code generation that rewrites tracked files, commit, or otherwise carry out the plan. Prefer existing functions and patterns over new machinery.
+
+              The tool catalog stays the same across modes for request-cache stability. These plan-mode rules override any later tool description or guidance that suggests using mutation tools; those tools remain listed to keep the tool catalog unchanged. Do not use todo_write to track this planning phase: it tracks implementation after an approved plan, while the plan itself belongs in exit_plan_mode.
+
+              Resolve discoverable facts by inspection. Use ask_user_question only for user-owned choices or material ambiguity that inspection cannot answer. Do not ask the user where code lives or how current behavior works when you can find out.
+
+              Make the plan decision-complete: state the goal and success criteria; group implementation changes by subsystem; identify public API, schema, and data-flow changes; cover edge cases, failure modes, tests, acceptance criteria, and explicit assumptions. Keep it concise enough to review but detailed enough that another engineer can implement it without making design decisions.
+
+              When ready, call exit_plan_mode with the complete plan markdown, starting with a # title. Make exit_plan_mode the only and final tool call in that assistant response: it presents the plan for approval, and implementation begins only in a later step after approval. Do not paste the final plan as a plain reply or ask "should I proceed?" through prose or ask_user_question. If review rejects it, incorporate the feedback and present again. If the review channel is unavailable or aborted, stay in plan mode and ask the user to switch modes manually; do not proceed with implementation.
+
+# ── compaction ──────────────────────────────────────────────────────────────
+
+# `compaction-basic` reads `toolResultPrune` through `ctx.get`, so the pruner must
+# share this realm rather than sit outside it.
+#
+# `tokenMeter` is deliberately NOT in this realm: the meter stays on the HOST
+# plane, and the rows here resolve that one instance. It takes no configuration,
+# keys every fold by Session, and owns the context-meter projection units the
+# browser reads for every session — behind a realm those units would come and go
+# with whichever presets happen to be mounted. What a preset chooses is whether
+# its agent compacts at all, which is `compaction-basic` below.
+- id: compaction
+  name: cordis:group
+  group: true
+  isolate:
+    compaction: true
+    toolResultPruner: true
+  config:
+    - id: compaction-basic
+      name: '@deepseek-ai/dsh-compaction-basic'
+      config:
+        thresholdRatio: 0.6
+        retainRatio: 0.3
+        headroomTokens: 32768
+        maxTokens: 16384
+
+    - id: command-compact
+      name: '@deepseek-ai/dsh-command-compact'
+
+    - id: tool-result-pruner
+      name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+      config:
+        thresholdChars: 12000
+        headChars: 6000
+        tailChars: 2000
+
+# ── delegation and workflows ────────────────────────────────────────────────
+
+# The `subagents` registry and its spawn/fork backends live in the HOST
+# composition: the registry is a process singleton whose cross-session queries
+# the api-proxy serves to the browser, and a provider name may only be
+# registered once. This preset contributes the delegation TOOLS, which resolve
+# that host registry.
+#
+# `workflows` is different — nothing outside an agent reads it — so every row
+# that reaches it shares one entry-local realm here, and a consumer left
+# outside would resolve a host registry this preset does not populate.
+- id: delegation
+  name: cordis:group
+  group: true
+  isolate:
+    workflowEngine: true
+  config:
+    # 官方 experimental-agent-team-profile 会在 profile 层 disabled 掉同名行。
+    # 红队必须显式 disabled: false，否则只有 spawn_teammate，指挥按 subagent 派活会失败。
+    - id: tool-subagent-control
+      name: '@deepseek-ai/dsh-tool-subagent-control'
+      disabled: false
+
+    - id: tool-subagent-list-agents
+      name: '@deepseek-ai/dsh-tool-subagent-control/list-agents'
+      disabled: false
+
+    - id: tool-subagent
+      name: '@deepseek-ai/dsh-tool-subagent'
+      disabled: false
+      config:
+        provider: spawn
+        toolName: subagent
+        modelSelectionSettings: true
+        backgroundMode: continuable
+        # 子智能体是角色执行者（信息收集/资产梳理/漏洞发现/漏洞利用/内网渗透），**必须是叶子节点**：
+        # 靠提示词劝"不要再往下委派"是软的——模型完全可以无视。这里用 maxDepth: 1 做硬约束：
+        # 子会话再调 subagent / subagent_fork 会被深度检查拒绝（spawn 与 fork 两条路径同卡 1）。
+        # [restrict-strip] 子智能体收成叶子（maxDepth: 1），委派深度不再放开。
+        maxDepth: 6
+        # 0.2.1-rc.2 已废弃 toolFilter（#138）：写在这里会让整份红队预设注册失败，模式下拉里选不中。
+        # 子智能体靠 maxDepth: 1 收成叶子，不再用 deny 名单。
+
+    # Fork omits model selection so provider/model stay equal to the parent and
+    # the inherited history remains eligible for KV Cache reuse. This preset
+    # keeps fork continuable; parent and child inherit the same messaging tool,
+    # while the parent id and return guidance follow the inherited history.
+    - id: tool-subagent-fork
+      name: '@deepseek-ai/dsh-tool-subagent'
+      disabled: false
+      config:
+        provider: fork
+        toolName: subagent_fork
+        backgroundMode: continuable
+        # [restrict-strip] 与 spawn 同口径：子智能体是叶子，fork 继承上下文但深度同样卡 1。
+        maxDepth: 6
+
+    # Production dsh does not install these optional providers. Install the
+    # matching Bundle in this Profile and restart the Host, then copy this
+    # preset and remove `disabled` from the matching tool row. Host availability
+    # alone grants no tool.
+    - id: tool-subagent-codex
+      name: '@deepseek-ai/dsh-tool-subagent'
+      disabled: true
+      config:
+        provider: codex
+        toolName: subagent_codex
+        backgroundMode: one-shot
+        maxDepth: provider-managed
+
+    - id: tool-subagent-claude-code
+      name: '@deepseek-ai/dsh-tool-subagent'
+      disabled: true
+      config:
+        provider: claude-code
+        toolName: subagent_claude_code
+        backgroundMode: one-shot
+        maxDepth: provider-managed
+
+    - id: workflow-worker-thread
+      name: '@deepseek-ai/dsh-workflow-worker-thread'
+      # web 配置通常不装 worker-thread 引擎；未启动会导致整个预设 broken、模式下拉被过滤。
+      disabled: true
+      config:
+        provider: spawn
+
+    - id: workflow-ptc
+      name: '@deepseek-ai/dsh-workflow-ptc'
+      config:
+        provider: spawn
+
+    - id: tool-workflow
+      name: '@deepseek-ai/dsh-tool-workflow'
+
+    - id: tool-ralph
+      name: '@deepseek-ai/dsh-tool-ralph'
+      config:
+        subagentProvider: spawn
+        maxRounds: 64
+
+# ── remaining model-facing rows ─────────────────────────────────────────────
+
+- id: tool-ask-user
+  name: '@deepseek-ai/dsh-tool-ask-user'
+
+- id: tool-todo
+  name: '@deepseek-ai/dsh-tool-todo'
+  config:
+    allowParallelInProgress: true
+
+# The `web` service and its search provider stay in the host composition; only
+# the model-facing tool is per-session.
+- id: tool-web
+  name: '@deepseek-ai/dsh-tool-web'
+  config:
+    fetch: true
+    searchTimeoutMs: 60000
