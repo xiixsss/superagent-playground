@@ -1,0 +1,27 @@
+﻿4
+---
+cpu0
+cpu1
+cpu2
+cpu3
+cpufreq
+hotplug
+isolated
+kernel_max
+modalias
+offline
+online
+possible
+present
+smt
+uevent
+vulnerabilities
+---
+adb.exe : /system/bin/sh: core: inaccessible or not found
+At C:\Users\Administrator\.dsh-beta\state\superagent\work\ldplayer-exposure-scan-5c3516c99670\emulator-recon\collect.ps
+1:57 char:8
++   $r = & $adb -s $s shell $cmd 2>&1
++        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (/system/bin/sh:...le or not found:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

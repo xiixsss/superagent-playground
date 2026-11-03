@@ -1,0 +1,9 @@
+﻿/system/bin/su
+---
+16 com.android.settings
+---
+ls: /sbin/su: No such file or directory
+lrwxr-xr-x 1 root shell    10 2026-09-15 19:23 /system/bin/su -> ../xbin/su
+-rwsr-x--x 1 root shell 60368 2026-09-15 19:23 /system/xbin/su
+---
+uid=0(root) gid=0(root) groups=0(root) context=u:r:su:s0

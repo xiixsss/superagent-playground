@@ -1,0 +1,2 @@
+﻿[phone.productname]: [dnplayer]
+[ro.boot.qemu]: [1]

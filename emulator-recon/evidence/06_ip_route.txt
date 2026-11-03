@@ -1,0 +1,29 @@
+﻿172.16.1.0/24 dev wlan0 proto kernel scope link src 172.16.1.4 
+---
+172.16.1.0/24 dev wlan0 table wlan0_local proto static scope link 
+224.0.0.0/24 dev wlan0 table wlan0_local proto static scope link 
+default dev dummy0 table dummy0 proto static scope link 
+default via 172.16.1.1 dev wlan0 table wlan0 proto static 
+172.16.1.0/24 dev wlan0 table wlan0 proto static scope link 
+172.16.1.0/24 dev wlan0 proto kernel scope link src 172.16.1.4 
+local 127.0.0.0/8 dev lo table local proto kernel scope host src 127.0.0.1 
+local 127.0.0.1 dev lo table local proto kernel scope host src 127.0.0.1 
+broadcast 127.255.255.255 dev lo table local proto kernel scope link src 127.0.0.1 
+local 172.16.1.4 dev wlan0 table local proto kernel scope host src 172.16.1.4 
+broadcast 172.16.1.255 dev wlan0 table local proto kernel scope link src 172.16.1.4 
+fd17:625c:f037:1001::/64 dev wlan0 table wlan0_local proto static metric 1024 pref medium
+fe80::/64 dev wlan0 table wlan0_local proto static metric 1024 pref medium
+fe80::/64 dev dummy0 table dummy0 proto kernel metric 256 pref medium
+default dev dummy0 table dummy0 proto static metric 1024 pref medium
+fd17:625c:f037:1001::/64 dev wlan0 table wlan0 proto kernel metric 256 pref medium
+fd17:625c:f037:1001::/64 dev wlan0 table wlan0 proto static metric 1024 pref medium
+fe80::/64 dev wlan0 table wlan0 proto kernel metric 256 pref medium
+fe80::/64 dev wlan0 table wlan0 proto static metric 1024 pref medium
+default via fe80::5054:ff:fe12:3500 dev wlan0 table wlan0 proto ra metric 1024 expires 1075sec pref medium
+local ::1 dev lo table local proto kernel metric 0 pref medium
+local fd17:625c:f037:1001:2569:c40c:354b:9db3 dev wlan0 table local proto kernel metric 0 pref medium
+local fd17:625c:f037:1001:ff93:d207:808e:ec0f dev wlan0 table local proto kernel metric 0 pref medium
+local fe80::6c48:8aff:fe33:76ed dev dummy0 table local proto kernel metric 0 pref medium
+local fe80::8348:6531:5993:490c dev wlan0 table local proto kernel metric 0 pref medium
+multicast ff00::/8 dev dummy0 table local proto kernel metric 256 pref medium
+multicast ff00::/8 dev wlan0 table local proto kernel metric 256 pref medium

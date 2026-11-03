@@ -1,0 +1,30 @@
+﻿  Location Providers:
+    passive provider:
+      last location=null
+      enabled=true
+      properties=ProviderProperties[powerUsage=Low, accuracy=Fine]
+    fused provider:
+      service: ProviderRequest[OFF]
+      last location=null
+      enabled=true
+      properties=ProviderProperties[powerUsage=Low, accuracy=Fine, supports=[bearing,speed,altitude]]
+    gps provider:
+      service: ProviderRequest[OFF]
+      last location=null
+      enabled=true
+      identity=1000/android[GnssService]
+      properties=ProviderProperties[powerUsage=High, accuracy=Fine, requires=satellite, supports=[bearing,speed,altitude]]
+      mBatchingEnabled=false
+      GNSS_KPI_START
+      GNSS_KPI_END
+  Historical Aggregate Location Provider Data:
+  GNSS Manager:
+    GNSS Hardware Model Name: null
+    Status Provider:
+    11-03 14:07:10.897: passive provider [u0] enabled
+    11-03 14:07:11.927: gps provider [u0] enabled
+    11-03 14:07:12.489: passive provider [u0] enabled
+    11-03 14:07:12.489: gps provider [u0] enabled
+    11-03 14:07:13.026: fused provider [u0] enabled
+    11-03 14:07:16.391: passive provider +registration 1000/android[SensorNotificationService]/0AEA07C1 -> Request[PASSIVE, minUpdateInterval=+30m0s0ms, minUpdateDistance=100000.0, WorkSource{1000 android}]
+    11-03 14:07:16.395: passive provider request = ProviderRequest[@0]

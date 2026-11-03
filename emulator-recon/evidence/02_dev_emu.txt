@@ -1,0 +1,4 @@
+﻿drwxr-xr-x  2 root        root              40 2026-11-03 14:07 com.android.settings
+drwxr-xr-x  2 root        root              40 2026-11-03 14:07 com.android.settings.daemon
+crw-------  1 system      system       10, 124 2026-11-03 14:07 vboxguest
+crw-------  1 root        root         10, 123 2026-11-03 14:07 vboxuser
