@@ -1,0 +1,11 @@
+# 本仓库内的时间戳备份（改预设前自动生成，只留本地）
+_backups/
+
+# 一键模式的输入/产出不入库（可能含样本、凭据、真实 IP）
+drop/*
+!drop/.gitkeep
+!drop/README.md
+done/*
+!done/.gitkeep
+runs/*
+!runs/.gitkeep
